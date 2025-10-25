@@ -17,16 +17,13 @@ jobs:
           echo "${{ secrets.FTP_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
-      - name: Sync files to cPanel (SFTP)
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Upload site via SCP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_HOST }}
+          host: ${{ secrets.FTP_HOST }}
           port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
-          ssh_private_key: private_key.pem
-
-          local_path: ./public_html/snco
-          remote_path: /home/sacramen/public_html/snco
-
-          delete_remote_files: false
-          sftp_only: true
+          key: private_key.pem
+          source: public_html/snco/**
+          target: /home/sacramen/public_html/snco
+          overwrite: true
