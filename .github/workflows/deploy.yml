@@ -1,4 +1,5 @@
 name: Deploy via FTPS
+
 on:
   push:
     branches: [ main ]
@@ -7,17 +8,31 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    name: Upload to cPanel via FTPS
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Upload via FTPS
+      - name: Sync files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET }}
-          protocol: ftps-implicit
-          port: 990
-          log-level: verbose
+          protocol: ftps
+          port: ${{ secrets.FTP_PORT }}
+          server-dir: ${{ secrets.FTP_TARGET }}/
+          log-level: standard
+          timeout: 60000
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/*.zip
+            **/*.tar
+            **/*.tar.gz
+            **/*.tgz
+            **/*.md
+            **/README*
