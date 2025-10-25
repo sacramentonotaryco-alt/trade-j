@@ -2,8 +2,7 @@ name: Upload to cPanel via SFTP
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -19,11 +18,10 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          ssh_private_key: ${{ secrets.FTP_PRIVATE_KEY }}
 
           local_path: ./public_html/snco
           remote_path: /home/sacramen/public_html/snco
 
           delete_remote_files: false
           sftp_only: true
-          dry_run: false
