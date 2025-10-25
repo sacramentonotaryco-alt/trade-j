@@ -24,5 +24,6 @@ jobs:
           port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
           key: private_key.pem
-          source: source: ./**          target: /home/sacramen/public_html/snco
+          source: ./**
+          target: /home/sacramen/public_html/snco
           overwrite: true
