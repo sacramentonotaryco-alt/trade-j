@@ -1,38 +1,29 @@
-name: Deploy via FTPS
+name: Upload to cPanel via SFTP
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Upload to cPanel via FTPS
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Sync files to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Sync files to cPanel (SFTP)
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: ${{ secrets.FTP_PORT }}
-          server-dir: ${{ secrets.FTP_TARGET }}/
-          log-level: standard
-          timeout: 60000
-          exclude: |
-            **/.git*
-            **/.github/**
-            **/node_modules/**
-            **/*.zip
-            **/*.tar
-            **/*.tar.gz
-            **/*.tgz
-            **/*.md
-            **/README*
+
+          local_path: ./public_html/snco
+          remote_path: /home/sacramen/public_html/snco
+
+          delete_remote_files: false
+          sftp_only: true
+          dry_run: false
