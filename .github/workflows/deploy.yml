@@ -12,13 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Write private key to file
+        run: |
+          echo "${{ secrets.FTP_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
       - name: Sync files to cPanel (SFTP)
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.FTP_HOST }}
           port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
-          ssh_private_key: ${{ secrets.FTP_PRIVATE_KEY }}
+          ssh_private_key: private_key.pem
 
           local_path: ./public_html/snco
           remote_path: /home/sacramen/public_html/snco
