@@ -24,5 +24,33 @@ jobs:
           port: ${{ secrets.FTP_PORT }}
           username: ${{ secrets.FTP_USERNAME }}
           key: private_key.pem
+          source: trade-j/public_html/snco/**
+          target: /home/sacramen/public_html/snco
+          overwrite: truename: Upload to cPanel via SFTP
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Write private key to file
+        run: |
+          echo "${{ secrets.FTP_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Upload site via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
+          username: ${{ secrets.FTP_USERNAME }}
+          key: private_key.pem
           source:trade-j/public_html/snco/**          target: /home/sacramen/public_html/snco
           overwrite: true
