@@ -1,4 +1,13 @@
-name: Upload to cPanel via SFTP
+      - name: Upload site via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
+          username: ${{ secrets.FTP_USERNAME }}
+          key: private_key.pem
+          source: ./public_html/snco/**
+          target: /home/sacramen/public_html/snco
+          overwrite: truename: Upload to cPanel via SFTP
 
 on:
   push:
